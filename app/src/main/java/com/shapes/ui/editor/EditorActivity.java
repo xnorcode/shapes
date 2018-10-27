@@ -1,11 +1,12 @@
 package com.shapes.ui.editor;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.shapes.R;
 
-public class EditorActivity extends AppCompatActivity {
+import dagger.android.support.DaggerAppCompatActivity;
+
+public class EditorActivity extends DaggerAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
