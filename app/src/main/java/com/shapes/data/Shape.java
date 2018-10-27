@@ -12,9 +12,9 @@ public class Shape {
 
     private int height, width;
 
-    private int radius;
-
     private int color;
+
+    private int positionXAxis, positionYAxis;
 
     public Shape(int id) {
         this.id = id;
@@ -54,19 +54,27 @@ public class Shape {
         this.width = width;
     }
 
-    public int getRadius() {
-        return radius;
-    }
-
-    public void setRadius(int radius) {
-        this.radius = radius;
-    }
-
     public int getColor() {
         return color;
     }
 
     public void setColor(int color) {
         this.color = color;
+    }
+
+    public int getPositionXAxis() {
+        return positionXAxis;
+    }
+
+    public void setPositionXAxis(int positionXAxis) {
+        this.positionXAxis = positionXAxis;
+    }
+
+    public int getPositionYAxis() {
+        return positionYAxis;
+    }
+
+    public void setPositionYAxis(int positionYAxis) {
+        this.positionYAxis = positionYAxis;
     }
 }
