@@ -18,8 +18,17 @@ public interface EditorContract {
          * Draw the new shape on canvas
          *
          * @param shape The new Shape object to draw
+         * @return The index of the shape's view on canvas
          */
-        void drawShape(Shape shape);
+        int drawShape(Shape shape);
+
+
+        /**
+         * Remove a shape from canvas
+         *
+         * @param viewIndex
+         */
+        void removeShape(int viewIndex);
 
     }
 
@@ -30,10 +39,11 @@ public interface EditorContract {
         /**
          * Initialize Editor Screen
          *
-         * @param canvasWidth  The width of the canvas
-         * @param canvasHeight The height of the canvas
+         * @param canvasWidth   The width of the canvas
+         * @param canvasHeight  The height of the canvas
+         * @param shapeSizeInPx The size of each shape in px
          */
-        void init(int canvasWidth, int canvasHeight);
+        void init(int canvasWidth, int canvasHeight, int shapeSizeInPx);
 
 
         /**
@@ -42,6 +52,12 @@ public interface EditorContract {
          * @param type The type of the new shape
          */
         void generateShape(@SHAPE_TYPE int type);
+
+
+        /**
+         * Undo last action
+         */
+        void undoAction();
 
     }
 }
