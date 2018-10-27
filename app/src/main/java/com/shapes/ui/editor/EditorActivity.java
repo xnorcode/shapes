@@ -1,7 +1,9 @@
-package com.shapes;
+package com.shapes.ui.editor;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
+import com.shapes.R;
 
 public class EditorActivity extends AppCompatActivity {
 
