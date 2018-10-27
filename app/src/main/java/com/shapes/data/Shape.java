@@ -14,7 +14,7 @@ public class Shape {
 
     private int radius;
 
-    private String color;
+    private int color;
 
     public Shape(int id) {
         this.id = id;
@@ -62,11 +62,11 @@ public class Shape {
         this.radius = radius;
     }
 
-    public String getColor() {
+    public int getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(int color) {
         this.color = color;
     }
 }
