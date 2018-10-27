@@ -10,9 +10,7 @@ public class Shape {
     @SHAPE_TYPE
     private int type;
 
-    private int height;
-
-    private int width;
+    private int height, width;
 
     private int radius;
 

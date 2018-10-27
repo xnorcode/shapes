@@ -7,9 +7,10 @@ import javax.inject.Inject;
  */
 public class EditorPresenter implements EditorContract.Presenter {
 
-    private int canvaWidth;
-
-    private int canvaHeight;
+    /**
+     * Canvas width and height in pixels
+     */
+    private int canvaWidth, canvaHeight;
 
     private int shapeRadius;
 
