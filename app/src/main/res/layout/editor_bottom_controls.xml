@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/editor_fragment_bottom_controls_height"
+              android:gravity="center"
+              android:orientation="horizontal"
+              android:weightSum="3">
+
+    <ImageButton
+        android:id="@+id/btn_add_square"
+        android:layout_width="@dimen/editor_fragment_bottom_controls_button_width"
+        android:layout_height="@dimen/editor_fragment_bottom_controls_button_height"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:src="@mipmap/ic_launcher"/>
+
+    <ImageButton
+        android:id="@+id/btn_add_circle"
+        android:layout_width="@dimen/editor_fragment_bottom_controls_button_width"
+        android:layout_height="@dimen/editor_fragment_bottom_controls_button_height"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:src="@mipmap/ic_launcher"/>
+
+    <ImageButton
+        android:id="@+id/btn_add_triangle"
+        android:layout_width="@dimen/editor_fragment_bottom_controls_button_width"
+        android:layout_height="@dimen/editor_fragment_bottom_controls_button_height"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:src="@mipmap/ic_launcher"/>
+
+</LinearLayout>
