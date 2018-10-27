@@ -30,11 +30,10 @@ public interface EditorContract {
         /**
          * Initialize Editor Screen
          *
-         * @param screenWidth      The width of the canvas
-         * @param screenHeight     The height of the canvas
-         * @param totalNumOfShapes The total number of shapes to fit on canvas
+         * @param canvaWidth  The width of the canvas
+         * @param canvaHeight The height of the canvas
          */
-        void init(int screenWidth, int screenHeight, int totalNumOfShapes);
+        void init(int canvaWidth, int canvaHeight);
 
 
         /**
