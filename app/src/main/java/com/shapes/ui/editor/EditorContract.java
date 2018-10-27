@@ -30,10 +30,10 @@ public interface EditorContract {
         /**
          * Initialize Editor Screen
          *
-         * @param canvaWidth  The width of the canvas
-         * @param canvaHeight The height of the canvas
+         * @param canvasWidth  The width of the canvas
+         * @param canvasHeight The height of the canvas
          */
-        void init(int canvaWidth, int canvaHeight);
+        void init(int canvasWidth, int canvasHeight);
 
 
         /**
