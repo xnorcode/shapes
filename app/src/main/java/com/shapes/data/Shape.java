@@ -16,6 +16,8 @@ public class Shape {
 
     private int positionXAxis, positionYAxis;
 
+    private int viewIndex;
+
     public Shape(int id) {
         this.id = id;
     }
@@ -76,5 +78,13 @@ public class Shape {
 
     public void setPositionYAxis(int positionYAxis) {
         this.positionYAxis = positionYAxis;
+    }
+
+    public int getViewIndex() {
+        return viewIndex;
+    }
+
+    public void setViewIndex(int viewIndex) {
+        this.viewIndex = viewIndex;
     }
 }
