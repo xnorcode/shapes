@@ -44,8 +44,10 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
     @Override
     public void onStart() {
         super.onStart();
+
         // bind this view to presenter
         presenter.setView(this);
+
         // initialize the presenter
         presenter.init(canvas.getWidth(), canvas.getHeight());
     }
