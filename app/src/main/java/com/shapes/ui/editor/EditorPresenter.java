@@ -71,15 +71,25 @@ public class EditorPresenter implements EditorContract.Presenter {
         compositeDisposable.clear();
         compositeDisposable.add(Single.<Shape>create(emitter -> {
 
+            // find a random slot on canvas grid
+            int gridIndex = getRandomGrid();
+
+            // if grid full return
+            if (gridIndex == -1) {
+                emitter.onError(new Exception("Editor is full!"));
+                return;
+            }
+
             // create new shape
             Shape shape = new Shape(shapesDrawnOnCanvas.size() + 1, type);
 
-            // usedGrids shape random color
+            // set shape a random color
             shape.setColor(generateRandomColor());
 
-            // usedGrids shape grid slot on the canvas
-            shape.setGridIndex(getRandomGrid());
+            // set shape's grid index on canvas
+            shape.setGridIndex(gridIndex);
 
+            // emit shape
             emitter.onSuccess(shape);
         })
                 .subscribeOn(Schedulers.io())
@@ -93,7 +103,7 @@ public class EditorPresenter implements EditorContract.Presenter {
 
                     // add shape in stack
                     shapesDrawnOnCanvas.push(shape);
-                }));
+                }, throwable -> view.showNotification(throwable.getMessage())));
     }
 
 
