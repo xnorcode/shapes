@@ -1,7 +1,5 @@
 package com.shapes.ui.editor;
 
-import android.graphics.Color;
-
 import com.shapes.data.Shape;
 
 import java.util.HashSet;
@@ -139,14 +137,17 @@ public class EditorPresenter implements EditorContract.Presenter {
     }
 
 
-    // generating random color for each shape
+    /**
+     * Helper method to select random color
+     *
+     * @return a random
+     */
     private int generateRandomColor() {
         Random rnd = new Random();
         int r = rnd.nextInt(200);
         int g = 136;
         int b = rnd.nextInt(220);
-        // TODO: 28/10/2018 replace Color.rgb() method with java one
-        return Color.rgb(r, g, b);
+        return 0xff000000 | (r << 16) | (g << 8) | b;
     }
 
 
