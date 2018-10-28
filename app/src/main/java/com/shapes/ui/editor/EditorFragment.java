@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
 
 import com.shapes.R;
 import com.shapes.data.Shape;
@@ -32,7 +31,7 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
 
 
     @BindView(R.id.editor_fragment_canvas)
-    FrameLayout canvas;
+    EditorCanvas canvas;
 
     @Inject
     EditorContract.Presenter presenter;
@@ -54,8 +53,11 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
                 // get shape size in px
                 int shapeSize = (int) getResources().getDimension(R.dimen.shape_size);
 
+                // create canvas grid
+                canvas.calculateGrids(shapeSize);
+
                 // initialize the presenter
-                presenter.init(canvas.getWidth(), canvas.getHeight(), shapeSize);
+                presenter.init(canvas.getGridCapacity());
             }
         });
 
@@ -121,7 +123,7 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
 
 
     @Override
-    public void removeShape(int viewIndex) {
+    public void removeShapeAt(int viewIndex) {
         // remove view with
         canvas.removeViewAt(viewIndex);
     }
@@ -143,11 +145,11 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
     private int addViewToCanvas(View view, Shape shape) {
 
         // set shape size
-        view.setLayoutParams(new ViewGroup.LayoutParams(shape.getWidth(), shape.getHeight()));
+        view.setLayoutParams(new ViewGroup.LayoutParams(canvas.getGridSize(), canvas.getGridSize()));
 
         // set shape position on canvas
-        view.setX(shape.getPositionXAxis());
-        view.setY(shape.getPositionYAxis());
+        view.setX(canvas.getPositionXForGrid(shape.getGridIndex()));
+        view.setY(canvas.getPositionYForGrid(shape.getGridIndex()));
 
         // add onClick listener
         view.setOnClickListener(v -> {
