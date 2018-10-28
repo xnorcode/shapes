@@ -55,6 +55,17 @@ public interface EditorContract {
 
 
         /**
+         * Change shape type
+         *
+         * @param viewIndex      The index of the view to be replaced
+         * @param type           The type of the new shape
+         * @param positionWidth  The canvas width to position new shape
+         * @param positionHeight The canvas height to position new shape
+         */
+        void replaceShapeWith(int viewIndex, @SHAPE_TYPE int type, int positionWidth, int positionHeight);
+
+
+        /**
          * Undo last action
          */
         void undoAction();
