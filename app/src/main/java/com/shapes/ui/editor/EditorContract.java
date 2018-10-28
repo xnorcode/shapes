@@ -30,6 +30,14 @@ public interface EditorContract {
          */
         void removeShapeAt(int viewIndex);
 
+
+        /**
+         * Display user notification
+         *
+         * @param msg The message to display
+         */
+        void showNotification(String msg);
+
     }
 
 

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Toast;
 
 import com.shapes.R;
 import com.shapes.data.Shape;
@@ -126,6 +127,12 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
     public void removeShapeAt(int viewIndex) {
         // remove view with
         canvas.removeViewAt(viewIndex);
+    }
+
+
+    @Override
+    public void showNotification(String msg) {
+        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
     }
 
 
