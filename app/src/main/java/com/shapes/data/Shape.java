@@ -14,7 +14,7 @@ public class Shape {
 
     private int color;
 
-    private int positionXAxis, positionYAxis;
+    private int gridIndex;
 
     private int viewIndex;
 
@@ -64,20 +64,12 @@ public class Shape {
         this.color = color;
     }
 
-    public int getPositionXAxis() {
-        return positionXAxis;
+    public int getGridIndex() {
+        return gridIndex;
     }
 
-    public void setPositionXAxis(int positionXAxis) {
-        this.positionXAxis = positionXAxis;
-    }
-
-    public int getPositionYAxis() {
-        return positionYAxis;
-    }
-
-    public void setPositionYAxis(int positionYAxis) {
-        this.positionYAxis = positionYAxis;
+    public void setGridIndex(int gridIndex) {
+        this.gridIndex = gridIndex;
     }
 
     public int getViewIndex() {
