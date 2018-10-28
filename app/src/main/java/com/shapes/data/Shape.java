@@ -10,8 +10,6 @@ public class Shape {
     @SHAPE_TYPE
     private int type;
 
-    private int height, width;
-
     private int color;
 
     private int gridIndex;
@@ -38,22 +36,6 @@ public class Shape {
 
     public void setType(@SHAPE_TYPE int type) {
         this.type = type;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
     }
 
     public int getColor() {
