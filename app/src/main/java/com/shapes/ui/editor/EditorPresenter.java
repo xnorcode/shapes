@@ -149,19 +149,29 @@ public class EditorPresenter implements EditorContract.Presenter {
         return Color.rgb(r, g, b);
     }
 
+
+    /**
+     * Helper method to select random grid index
+     *
+     * @return Random grid index
+     */
     private int getRandomGrid() {
-        Random random = new Random();
 
         // TODO: 28/10/2018 exclude slots used
+        // get a random index
+        Random random = new Random();
         int slot = random.nextInt(grids) + 1;
 
+        // exit when all grids are full
         if (usedGrids.size() >= grids) return -1;
 
+        // if index not used save it and return it
         if (!usedGrids.contains(slot)) {
             usedGrids.add(slot);
             return slot;
         }
 
+        // if index is used find another
         return getRandomGrid();
     }
 }
