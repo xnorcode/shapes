@@ -26,9 +26,9 @@ public interface EditorContract {
         /**
          * Remove a shape from canvas
          *
-         * @param viewIndex
+         * @param viewIndex The index of the shape's view on canvas
          */
-        void removeShape(int viewIndex);
+        void removeShapeAt(int viewIndex);
 
     }
 
@@ -39,11 +39,9 @@ public interface EditorContract {
         /**
          * Initialize Editor Screen
          *
-         * @param canvasWidth   The width of the canvas
-         * @param canvasHeight  The height of the canvas
-         * @param shapeSizeInPx The size of each shape in px
+         * @param grids The grid capacity
          */
-        void init(int canvasWidth, int canvasHeight, int shapeSizeInPx);
+        void init(int grids);
 
 
         /**
@@ -57,12 +55,11 @@ public interface EditorContract {
         /**
          * Change shape type
          *
-         * @param viewIndex      The index of the view to be replaced
-         * @param type           The type of the new shape
-         * @param positionWidth  The canvas width to position new shape
-         * @param positionHeight The canvas height to position new shape
+         * @param viewIndex The index of the view to be replaced
+         * @param type      The type of the new shape
+         * @param grid      The grid index to place the new shape
          */
-        void replaceShapeWith(int viewIndex, @SHAPE_TYPE int type, int positionWidth, int positionHeight);
+        void replaceShapeWith(int viewIndex, @SHAPE_TYPE int type, int grid);
 
 
         /**
