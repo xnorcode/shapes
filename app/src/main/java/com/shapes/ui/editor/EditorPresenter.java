@@ -153,7 +153,7 @@ public class EditorPresenter implements EditorContract.Presenter {
         Random random = new Random();
 
         // TODO: 28/10/2018 exclude slots used
-        int slot = random.nextInt(grids);
+        int slot = random.nextInt(grids) + 1;
 
         if (usedGrids.size() >= grids) return -1;
 
