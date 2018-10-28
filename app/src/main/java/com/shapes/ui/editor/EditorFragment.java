@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
 import com.shapes.R;
@@ -44,6 +45,20 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
 
         ButterKnife.bind(this, rootView);
 
+        canvas.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // remove listener
+                canvas.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                // get shape size in px
+                int shapeSize = (int) getResources().getDimension(R.dimen.shape_size);
+
+                // initialize the presenter
+                presenter.init(canvas.getWidth(), canvas.getHeight(), shapeSize);
+            }
+        });
+
         return rootView;
     }
 
@@ -54,12 +69,6 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
 
         // bind this view to presenter
         presenter.setView(this);
-
-        // get shape size in px
-        int shapeSize = (int) getResources().getDimension(R.dimen.shape_size);
-
-        // initialize the presenter
-        presenter.init(canvas.getWidth(), canvas.getHeight(), shapeSize);
     }
 
 
@@ -141,11 +150,8 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
         view.setY(shape.getPositionYAxis());
 
         // add onClick listener
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: 28/10/2018 swap shape type
-            }
+        view.setOnClickListener(v -> {
+            // TODO: 28/10/2018 swap shape type
         });
 
         // add view to canvas
