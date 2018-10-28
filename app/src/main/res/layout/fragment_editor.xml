@@ -4,7 +4,7 @@
              android:layout_height="match_parent"
              android:background="@color/veryLightGrey">
 
-    <FrameLayout
+    <com.shapes.ui.editor.EditorCanvas
         android:id="@+id/editor_fragment_canvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
