@@ -4,26 +4,28 @@ import android.graphics.Color;
 
 import com.shapes.data.Shape;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 import java.util.Stack;
 
 import javax.inject.Inject;
+
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by xnorcode on 27/10/2018.
  */
 public class EditorPresenter implements EditorContract.Presenter {
 
-    /**
-     * Canvas width and height in pixels
-     */
-    private int canvasWidth, canvasHeight;
-
 
     /**
-     * Size of shapes in pixels
+     * The grid capacity
      */
-    private int shapeSizeInPx;
+    private int grids;
 
 
     /**
@@ -38,50 +40,78 @@ public class EditorPresenter implements EditorContract.Presenter {
     private Stack<Shape> shapesDrawnOnCanvas;
 
 
+    /**
+     * Save all used grid indexes
+     */
+    private Set<Integer> usedGrids;
+
+
+    /**
+     * Manager disposables
+     */
+    private CompositeDisposable compositeDisposable;
+
+
     @Inject
     public EditorPresenter() {
         this.shapesDrawnOnCanvas = new Stack<>();
+        this.compositeDisposable = new CompositeDisposable();
+        this.usedGrids = new HashSet<>();
     }
 
 
     @Override
-    public void init(int canvasWidth, int canvasHeight, int shapeSizeInPx) {
-        this.canvasWidth = canvasWidth;
-        this.canvasHeight = canvasHeight;
-        this.shapeSizeInPx = shapeSizeInPx;
+    public void init(int grids) {
+        this.grids = grids;
     }
 
 
     @Override
     public void generateShape(int type) {
+        compositeDisposable.clear();
+        compositeDisposable.add(Single.<Shape>create(emitter -> {
 
-        // create new shape
-        Shape shape = new Shape(shapesDrawnOnCanvas.size() + 1, type);
+            // create new shape
+            Shape shape = new Shape(shapesDrawnOnCanvas.size() + 1, type);
 
-        // set shape size
-        shape.setHeight(shapeSizeInPx);
-        shape.setWidth(shapeSizeInPx);
+            // usedGrids shape random color
+            shape.setColor(generateRandomColor());
 
-        // set shape random color
-        shape.setColor(generateRandomColor());
+            // usedGrids shape grid slot on the canvas
+            shape.setGridIndex(getRandomGrid());
 
-        // TODO: 28/10/2018 set random shape positioning on canvas
+            emitter.onSuccess(shape);
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(shape -> {
+                    // show on screen
+                    int index = view.drawShape(shape);
 
-        // show on screen
-        int index = view.drawShape(shape);
+                    // usedGrids index on shape
+                    shape.setViewIndex(index);
 
-        // set index on shape
-        shape.setViewIndex(index);
+                    // add shape in stack
+                    shapesDrawnOnCanvas.push(shape);
+                }));
+    }
 
-        // add shape in stack
-        shapesDrawnOnCanvas.push(shape);
+
+    @Override
+    public void replaceShapeWith(int viewIndex, int type, int grid) {
+
+        // remove old shape
+
+        // generate new shape
+
+        // usedGrids position of new shape
     }
 
 
     @Override
     public void undoAction() {
         if (shapesDrawnOnCanvas.size() == 0) return;
-        view.removeShape(shapesDrawnOnCanvas.pop().getViewIndex());
+        view.removeShapeAt(shapesDrawnOnCanvas.pop().getViewIndex());
     }
 
 
@@ -94,6 +124,8 @@ public class EditorPresenter implements EditorContract.Presenter {
     @Override
     public void dropView() {
         view = null;
+        if (compositeDisposable != null) compositeDisposable.clear();
+        compositeDisposable = null;
     }
 
 
@@ -105,5 +137,21 @@ public class EditorPresenter implements EditorContract.Presenter {
         int b = rnd.nextInt(220);
         // TODO: 28/10/2018 replace Color.rgb() method with java one
         return Color.rgb(r, g, b);
+    }
+
+    private int getRandomGrid() {
+        Random random = new Random();
+
+        // TODO: 28/10/2018 exclude slots used
+        int slot = random.nextInt(grids);
+
+        if (usedGrids.size() >= grids) return -1;
+
+        if (!usedGrids.contains(slot)) {
+            usedGrids.add(slot);
+            return slot;
+        }
+
+        return getRandomGrid();
     }
 }
