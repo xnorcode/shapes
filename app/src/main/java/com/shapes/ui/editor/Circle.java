@@ -1,14 +1,10 @@
 package com.shapes.ui.editor;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.shapes.R;
 
 /**
  * Created by xnorcode on 27/10/2018.
@@ -28,21 +24,6 @@ public class Circle extends View implements ShapeView {
         super(context);
         // create paint
         paint = new Paint();
-    }
-
-    public Circle(Context context, AttributeSet attrs) {
-        super(context, attrs);
-
-        // create paint
-        paint = new Paint();
-
-        // set color assigned on xml attributes
-        TypedArray types = context.obtainStyledAttributes(attrs, R.styleable.shapeViewAttr);
-        try {
-            setColor(types.getInteger(R.styleable.shapeViewAttr_shapeColor, 0));
-        } finally {
-            types.recycle();
-        }
     }
 
 
