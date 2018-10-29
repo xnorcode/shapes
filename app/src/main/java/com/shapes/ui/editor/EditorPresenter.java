@@ -1,5 +1,6 @@
 package com.shapes.ui.editor;
 
+import com.shapes.data.SHAPE_TYPE;
 import com.shapes.data.Shape;
 
 import java.util.AbstractMap;
@@ -19,6 +20,9 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.shapes.utils.Constants.EDITOR_ADD_SHAPE;
 import static com.shapes.utils.Constants.EDITOR_SWAP_SHAPE;
+import static com.shapes.utils.Constants.SHAPE_TYPE_CIRCLE;
+import static com.shapes.utils.Constants.SHAPE_TYPE_SQUARE;
+import static com.shapes.utils.Constants.SHAPE_TYPE_TRIANGLE;
 
 /**
  * Created by xnorcode on 27/10/2018.
@@ -126,15 +130,25 @@ public class EditorPresenter implements EditorContract.Presenter {
 
 
     @Override
-    public void replaceShapeWith(int viewIndex, int type, int grid) {
+    public void swapShape(int id, boolean revert) {
+
+        // get shape from cache
+        Shape shape = shapesCache.get(id);
+
+        // swap shape type
+        shape.setType(swapShapeType(shape.getType(), revert));
 
         // remove old shape
+        view.removeShapeAt(shape.getViewIndex());
 
         // generate new shape
+        shape.setViewIndex(view.drawShape(shape));
 
-        // usedGrids position of new shape
+        // save editor action in stack
+        if (!revert)
+            editorActionsTaken.push(new AbstractMap.SimpleEntry<>(EDITOR_SWAP_SHAPE,
+                    shape.getId()));
     }
-
 
     @Override
     public void undoAction() {
@@ -159,6 +173,8 @@ public class EditorPresenter implements EditorContract.Presenter {
                 break;
 
             case EDITOR_SWAP_SHAPE:
+                // revert type swap
+                swapShape(action.getValue(), true);
                 break;
         }
     }
@@ -215,5 +231,34 @@ public class EditorPresenter implements EditorContract.Presenter {
 
         // if index is used find another
         return getRandomGrid();
+    }
+
+
+    /**
+     * Helper method to swap shape types
+     *
+     * @param type   The current shape type
+     * @param revert Enable to revert back the type
+     * @return The new shape type
+     */
+    @SHAPE_TYPE
+    private int swapShapeType(@SHAPE_TYPE int type, boolean revert) {
+        switch (type) {
+
+            case SHAPE_TYPE_SQUARE:
+                if (revert) return SHAPE_TYPE_TRIANGLE;
+                return SHAPE_TYPE_CIRCLE;
+
+            case SHAPE_TYPE_CIRCLE:
+                if (revert) return SHAPE_TYPE_SQUARE;
+                return SHAPE_TYPE_TRIANGLE;
+
+            case SHAPE_TYPE_TRIANGLE:
+                if (revert) return SHAPE_TYPE_CIRCLE;
+                return SHAPE_TYPE_SQUARE;
+
+            default:
+                return SHAPE_TYPE_SQUARE;
+        }
     }
 }
