@@ -19,6 +19,15 @@ public interface ShapeDataSource {
 
 
     /**
+     * Get shape by its id
+     *
+     * @param id The shape's id
+     * @return The shape
+     */
+    Single<Shape> find(int id);
+
+
+    /**
      * Saves a shape
      *
      * @param shape The shape to be saved
