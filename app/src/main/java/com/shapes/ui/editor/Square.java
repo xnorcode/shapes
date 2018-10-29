@@ -4,26 +4,42 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 
 /**
  * Created by xnorcode on 27/10/2018.
  */
-public class Square extends View {
+public class Square extends View implements ShapeView {
 
     private Paint paint;
 
     private Rect rect;
 
 
-    public Square(Context context, int color) {
+    public Square(Context context) {
         super(context);
-
         // create paint
         paint = new Paint();
+    }
 
-        // set color
-        paint.setColor(color);
+    public Square(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        // create paint
+        paint = new Paint();
+    }
+
+    public Square(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        // create paint
+        paint = new Paint();
+    }
+
+    public Square(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        // create paint
+        paint = new Paint();
     }
 
 
@@ -42,5 +58,37 @@ public class Square extends View {
 
         // draw square on canvas
         canvas.drawRect(rect, paint);
+    }
+
+
+    @Override
+    public void setColor(int color) {
+        paint.setColor(color);
+    }
+
+    @Override
+    public void setSize(int size) {
+        setLayoutParams(new ViewGroup.LayoutParams(size, size));
+    }
+
+    @Override
+    public void positionOnCanvasAt(int x, int y) {
+        setX(x);
+        setY(y);
+    }
+
+    @Override
+    public void onClick(OnClickListener listener) {
+        setOnClickListener(listener);
+    }
+
+    @Override
+    public void onLongClick(OnLongClickListener listener) {
+        setOnLongClickListener(listener);
+    }
+
+    @Override
+    public View getView() {
+        return this;
     }
 }

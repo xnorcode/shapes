@@ -5,26 +5,42 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 
 /**
  * Created by xnorcode on 27/10/2018.
  */
-public class Triangle extends View {
+public class Triangle extends View implements ShapeView {
 
     private Paint paint;
 
     private Path path;
 
 
-    public Triangle(Context context, int color) {
+    public Triangle(Context context) {
         super(context);
-
         // create paint
         paint = new Paint();
+    }
 
-        // set color
-        paint.setColor(color);
+    public Triangle(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        // create paint
+        paint = new Paint();
+    }
+
+    public Triangle(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        // create paint
+        paint = new Paint();
+    }
+
+    public Triangle(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        // create paint
+        paint = new Paint();
     }
 
 
@@ -45,6 +61,37 @@ public class Triangle extends View {
         canvas.drawPath(path, paint);
     }
 
+
+    @Override
+    public void setColor(int color) {
+        paint.setColor(color);
+    }
+
+    @Override
+    public void setSize(int size) {
+        setLayoutParams(new ViewGroup.LayoutParams(size, size));
+    }
+
+    @Override
+    public void positionOnCanvasAt(int x, int y) {
+        setX(x);
+        setY(y);
+    }
+
+    @Override
+    public void onClick(OnClickListener listener) {
+        setOnClickListener(listener);
+    }
+
+    @Override
+    public void onLongClick(OnLongClickListener listener) {
+        setOnLongClickListener(listener);
+    }
+
+    @Override
+    public View getView() {
+        return this;
+    }
 
     /**
      * Create path

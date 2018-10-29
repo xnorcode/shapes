@@ -116,15 +116,15 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
 
             case SHAPE_TYPE_SQUARE:
                 // add shape view to canvas and return its index
-                return addViewToCanvas(new Square(getContext(), shape.getColor()), shape);
+                return addViewToCanvas(new Square(getContext()), shape);
 
             case SHAPE_TYPE_CIRCLE:
                 // add shape view to canvas and return its index
-                return addViewToCanvas(new Circle(getContext(), shape.getColor()), shape);
+                return addViewToCanvas(new Circle(getContext()), shape);
 
             case SHAPE_TYPE_TRIANGLE:
                 // add shape view to canvas and return its index
-                return addViewToCanvas(new Triangle(getContext(), shape.getColor()), shape);
+                return addViewToCanvas(new Triangle(getContext()), shape);
 
             default:
                 return 0;
@@ -152,34 +152,41 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
 
 
     /**
-     * Adds a shape on the canvas
+     * Add shape on canvas
      *
-     * @param view
-     * @param shape
-     * @return
+     * @param shapeView The shapes view interface
+     * @param shape     The shape data model
+     * @return The canvas view index of added shape view
      */
-    private int addViewToCanvas(View view, Shape shape) {
+    private int addViewToCanvas(ShapeView shapeView, Shape shape) {
+
+        // set color
+        shapeView.setColor(shape.getColor());
 
         // set shape size
-        view.setLayoutParams(new ViewGroup.LayoutParams(canvas.getGridSize(), canvas.getGridSize()));
+        shapeView.setSize(canvas.getGridSize());
 
         // set shape position on canvas
-        view.setX(canvas.getPositionXForGrid(shape.getGridIndex()));
-        view.setY(canvas.getPositionYForGrid(shape.getGridIndex()));
+        int x = canvas.getPositionXForGrid(shape.getGridIndex());
+        int y = canvas.getPositionYForGrid(shape.getGridIndex());
+        shapeView.positionOnCanvasAt(x, y);
 
         // add onClick listener to swap shape type
-        view.setOnClickListener(v -> {
+        shapeView.onClick(v -> {
             presenter.swapShape(shape.getId(), false);
         });
+
+        shapeView.onLongClick(v -> false);
+
 
         // TODO: 29/10/2018 Remove shape on longClick()
 
         // TODO: 29/10/2018 undo deletion of the shape
 
         // add view to canvas
-        canvas.addView(view, shape.getId() - 1);
+        canvas.addView(shapeView.getView(), shape.getId() - 1);
 
         // return index of added view on canvas
-        return canvas.indexOfChild(view);
+        return canvas.indexOfChild(shapeView.getView());
     }
 }
