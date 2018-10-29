@@ -2,6 +2,7 @@ package com.shapes.data;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 /**
@@ -31,6 +32,7 @@ public class Shape {
         this.id = id;
     }
 
+    @Ignore
     public Shape(int id, @SHAPE_TYPE int type) {
         this.id = id;
         this.type = type;
