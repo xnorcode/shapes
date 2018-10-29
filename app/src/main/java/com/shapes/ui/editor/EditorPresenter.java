@@ -2,7 +2,10 @@ package com.shapes.ui.editor;
 
 import com.shapes.data.Shape;
 
+import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
@@ -13,6 +16,9 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.shapes.utils.Constants.EDITOR_ADD_SHAPE;
+import static com.shapes.utils.Constants.EDITOR_SWAP_SHAPE;
 
 /**
  * Created by xnorcode on 27/10/2018.
@@ -33,9 +39,18 @@ public class EditorPresenter implements EditorContract.Presenter {
 
 
     /**
-     * All shapes currently shown on canvas
+     * Cache of all shapes currently shown on canvas
      */
-    private Stack<Shape> shapesDrawnOnCanvas;
+    private Map<Integer, Shape> shapesCache;
+
+
+    /**
+     * All editor actions taken
+     * <p>
+     * Pair Key: Editor Action
+     * Pair Value: Shape ID
+     */
+    private Stack<Map.Entry<Integer, Integer>> editorActionsTaken;
 
 
     /**
@@ -52,9 +67,10 @@ public class EditorPresenter implements EditorContract.Presenter {
 
     @Inject
     public EditorPresenter() {
-        this.shapesDrawnOnCanvas = new Stack<>();
         this.compositeDisposable = new CompositeDisposable();
         this.usedGrids = new HashSet<>();
+        this.editorActionsTaken = new Stack<>();
+        this.shapesCache = new HashMap<>();
     }
 
 
@@ -79,7 +95,7 @@ public class EditorPresenter implements EditorContract.Presenter {
             }
 
             // create new shape
-            Shape shape = new Shape(shapesDrawnOnCanvas.size() + 1, type);
+            Shape shape = new Shape(shapesCache.size() + 1, type);
 
             // set shape a random color
             shape.setColor(generateRandomColor());
@@ -99,8 +115,12 @@ public class EditorPresenter implements EditorContract.Presenter {
                     // usedGrids index on shape
                     shape.setViewIndex(index);
 
-                    // add shape in stack
-                    shapesDrawnOnCanvas.push(shape);
+                    // save editor action in stack
+                    editorActionsTaken.push(new AbstractMap.SimpleEntry<>(EDITOR_ADD_SHAPE, shape.getId()));
+
+                    // save shape in cache
+                    shapesCache.put(shape.getId(), shape);
+
                 }, throwable -> view.showNotification(throwable.getMessage())));
     }
 
@@ -118,8 +138,29 @@ public class EditorPresenter implements EditorContract.Presenter {
 
     @Override
     public void undoAction() {
-        if (shapesDrawnOnCanvas.size() == 0) return;
-        view.removeShapeAt(shapesDrawnOnCanvas.pop().getViewIndex());
+        // exit if no actions
+        if (editorActionsTaken.size() == 0) return;
+
+        // get latest action
+        Map.Entry<Integer, Integer> action = editorActionsTaken.pop();
+
+        // undo based on action type
+        switch (action.getKey()) {
+
+            case EDITOR_ADD_SHAPE:
+                // get last added shape
+                Shape shape = shapesCache.get(shapesCache.size());
+
+                // remove view from canvas
+                view.removeShapeAt(shape.getViewIndex());
+
+                // delete from cache
+                shapesCache.remove(shape.getId());
+                break;
+
+            case EDITOR_SWAP_SHAPE:
+                break;
+        }
     }
 
 
