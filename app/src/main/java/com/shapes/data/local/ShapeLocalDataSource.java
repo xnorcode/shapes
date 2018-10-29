@@ -24,6 +24,11 @@ public class ShapeLocalDataSource implements DbHelper {
     }
 
     @Override
+    public Shape getShape(int id) {
+        return shapeDao.getShape(id);
+    }
+
+    @Override
     public void insertShape(Shape shape) {
         shapeDao.insertShape(shape);
     }

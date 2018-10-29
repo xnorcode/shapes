@@ -19,6 +19,15 @@ public interface DbHelper {
 
 
     /**
+     * Gets a shape from database
+     *
+     * @param id The id of the shape to get
+     * @return The shape
+     */
+    Shape getShape(int id);
+
+
+    /**
      * Inserts a shape in the database
      *
      * @param shape The shape to be inserted

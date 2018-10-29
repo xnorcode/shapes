@@ -21,6 +21,9 @@ public interface ShapeDao {
     @Query(" SELECT * FROM shapes")
     List<Shape> getShapes();
 
+    @Query(" SELECT * FROM shapes WHERE id = :id")
+    Shape getShape(int id);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertShape(Shape shape);
 

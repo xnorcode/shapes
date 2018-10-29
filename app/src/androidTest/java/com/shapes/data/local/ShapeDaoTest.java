@@ -59,6 +59,17 @@ public class ShapeDaoTest {
     }
 
     @Test
+    public void getShape() {
+        // insert shape in db
+        database.getShapesDao().insertShape(shape);
+
+        // get shape by id
+        Shape actual = database.getShapesDao().getShape(shape.getId());
+
+        Assert.assertEquals(shape, actual);
+    }
+
+    @Test
     public void updateShape() {
         // insert shape in db
         database.getShapesDao().insertShape(shape);
