@@ -21,6 +21,12 @@ public class ShapeRepositoryModule {
 
     @Singleton
     @Provides
+    ShapeDataSource providesShapeRepository(DbHelper dbHelper) {
+        return new ShapeRepository(dbHelper);
+    }
+
+    @Singleton
+    @Provides
     DbHelper providesShapeLocalDataSource(ShapeDao dao) {
         return new ShapeLocalDataSource(dao);
     }
