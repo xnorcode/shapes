@@ -3,6 +3,7 @@ package com.shapes.di;
 import android.app.Application;
 
 import com.shapes.ShapesApp;
+import com.shapes.data.ShapeRepositoryModule;
 
 import javax.inject.Singleton;
 
@@ -16,6 +17,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
  */
 @Singleton
 @Component(modules = {ApplicationModule.class,
+        ShapeRepositoryModule.class,
         ActivityBindingModule.class,
         AndroidSupportInjectionModule.class})
 public interface AppComponent extends AndroidInjector<ShapesApp> {
