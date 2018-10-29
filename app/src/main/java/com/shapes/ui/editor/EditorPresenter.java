@@ -163,10 +163,13 @@ public class EditorPresenter implements EditorContract.Presenter {
 
             case EDITOR_ADD_SHAPE:
                 // get last added shape
-                Shape shape = shapesCache.get(shapesCache.size());
+                Shape shape = shapesCache.get(action.getValue());
 
                 // remove view from canvas
                 view.removeShapeAt(shape.getViewIndex());
+
+                // deallocate grid
+                usedGrids.remove(shape.getGridIndex());
 
                 // delete from cache
                 shapesCache.remove(shape.getId());
