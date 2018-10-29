@@ -37,6 +37,10 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
     @Inject
     EditorContract.Presenter presenter;
 
+    // TODO: 29/10/2018 Show 'Stats' button
+
+    // TODO: 29/10/2018 Show Delete All button
+
 
     @Nullable
     @Override
@@ -98,6 +102,11 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
     @OnClick(R.id.btn_add_triangle)
     public void addTriangle() {
         presenter.generateShape(Constants.SHAPE_TYPE_TRIANGLE);
+    }
+
+    @OnClick(R.id.btn_undo)
+    public void undo() {
+        presenter.undoAction();
     }
 
 
@@ -162,6 +171,10 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
         view.setOnClickListener(v -> {
             presenter.swapShape(shape.getId(), false);
         });
+
+        // TODO: 29/10/2018 Remove shape on longClick()
+
+        // TODO: 29/10/2018 undo deletion of the shape
 
         // add view to canvas
         canvas.addView(view, shape.getId() - 1);
