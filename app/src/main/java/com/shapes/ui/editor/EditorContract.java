@@ -61,6 +61,14 @@ public interface EditorContract {
 
 
         /**
+         * Delete a shape
+         *
+         * @param id The shape's id
+         */
+        void deleteShape(int id);
+
+
+        /**
          * Swap shape type
          *
          * @param id     Current shape id
