@@ -1,10 +1,14 @@
 package com.shapes.ui.editor;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -12,6 +16,7 @@ import android.widget.Toast;
 
 import com.shapes.R;
 import com.shapes.data.Shape;
+import com.shapes.ui.stats.StatsActivity;
 import com.shapes.utils.Constants;
 
 import javax.inject.Inject;
@@ -37,9 +42,27 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
     @Inject
     EditorContract.Presenter presenter;
 
-    // TODO: 29/10/2018 Show 'Stats' button
 
-    // TODO: 29/10/2018 Show Delete All button
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_editor_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // TODO: 29/10/2018 Show Delete All button
+        if (item.getItemId() == R.id.editor_settings_action) {
+            startActivity(new Intent(getContext(), StatsActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
 
     @Nullable

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">shapes</string>
+
+    <string name="editor_settings_action_title">Editor Settings</string>
 </resources>
