@@ -1,19 +1,30 @@
 package com.shapes.data;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
 /**
  * Created by xnorcode on 27/10/2018.
  */
+@Entity(tableName = "shapes")
 public class Shape {
 
+    @PrimaryKey
+    @ColumnInfo(name = "id")
     private int id;
 
+    @ColumnInfo(name = "type")
     @SHAPE_TYPE
     private int type;
 
+    @ColumnInfo(name = "color")
     private int color;
 
+    @ColumnInfo(name = "gridIndex")
     private int gridIndex;
 
+    @ColumnInfo(name = "viewIndex")
     private int viewIndex;
 
     public Shape(int id) {
