@@ -61,13 +61,12 @@ public interface EditorContract {
 
 
         /**
-         * Change shape type
+         * Swap shape type
          *
-         * @param viewIndex The index of the view to be replaced
-         * @param type      The type of the new shape
-         * @param grid      The grid index to place the new shape
+         * @param id     Current shape id
+         * @param revert Enable to revert shape type
          */
-        void replaceShapeWith(int viewIndex, @SHAPE_TYPE int type, int grid);
+        void swapShape(int id, boolean revert);
 
 
         /**
