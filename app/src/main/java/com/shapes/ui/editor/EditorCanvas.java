@@ -83,12 +83,12 @@ public class EditorCanvas extends FrameLayout implements Canvas {
 
     @Override
     public int getPositionXForGrid(int grid) {
-        return ((grid - 1) % columns) * gridSize;
+        return ((grid - 1) % columns) * gridSize + widthPadding;
     }
 
 
     @Override
     public int getPositionYForGrid(int grid) {
-        return ((grid - 1) / columns) * gridSize;
+        return ((grid - 1) / columns) * gridSize + heightPadding;
     }
 }

@@ -8,8 +8,7 @@
         android:id="@+id/editor_fragment_canvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/editor_fragment_bottom_controls_height"
-        android:padding="8dp"/>
+        android:layout_marginBottom="@dimen/editor_fragment_bottom_controls_height"/>
 
     <include
         android:id="@+id/editor_fragment_bottom_controls"
