@@ -158,13 +158,13 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
         view.setX(canvas.getPositionXForGrid(shape.getGridIndex()));
         view.setY(canvas.getPositionYForGrid(shape.getGridIndex()));
 
-        // add onClick listener
+        // add onClick listener to swap shape type
         view.setOnClickListener(v -> {
-            // TODO: 28/10/2018 swap shape type
+            presenter.swapShape(shape.getId(), false);
         });
 
         // add view to canvas
-        canvas.addView(view);
+        canvas.addView(view, shape.getId() - 1);
 
         // return index of added view on canvas
         return canvas.indexOfChild(view);
