@@ -5,12 +5,14 @@ import com.shapes.data.local.DbHelper;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import io.reactivex.Single;
 
 /**
  * Created by xnorcode on 29/10/2018.
  */
+@Singleton
 public class ShapeRepository implements ShapeDataSource {
 
     private DbHelper shapeLocalDataSource;
@@ -24,7 +26,11 @@ public class ShapeRepository implements ShapeDataSource {
 
     @Override
     public Single<List<Shape>> load() {
-        return Single.<List<Shape>>create(emitter -> shapeLocalDataSource.getShapes());
+        return Single.<List<Shape>>create(emitter -> {
+            List<Shape> shapes = shapeLocalDataSource.getShapes();
+            if (shapes == null) emitter.onError(new Exception("Error loading shapes..."));
+            emitter.onSuccess(shapes);
+        });
     }
 
     @Override
