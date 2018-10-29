@@ -2,6 +2,7 @@ package com.shapes.data;
 
 import com.shapes.data.local.ShapeLocalDataSource;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -56,6 +57,22 @@ public class ShapeRepositoryTest {
 
         // verify local data source method called once
         Mockito.verify(localDataSource).getShapes();
+
+        // check cache
+        List<Shape> actual = new ArrayList<>(shapeRepository.shapesCache.values());
+        Assert.assertEquals(shapes, actual);
+    }
+
+    @Test
+    public void find() {
+        // make mock data available
+        Mockito.when(localDataSource.getShape(shape.getId())).thenReturn(shape);
+
+        // call method and check data
+        shapeRepository.find(shape.getId()).test().assertValue(shape);
+
+        // verify local data source method called once
+        Mockito.verify(localDataSource).getShape(shape.getId());
     }
 
     @Test
@@ -82,10 +99,10 @@ public class ShapeRepositoryTest {
     @Test
     public void delete() {
         //call method and check status
-        shapeRepository.delete(2).test().assertValue(true);
+        shapeRepository.delete(shape.getId()).test().assertValue(true);
 
         // verify local data source method called once
-        Mockito.verify(localDataSource).deleteShape(2);
+        Mockito.verify(localDataSource).deleteShape(shape.getId());
     }
 
     @Test
