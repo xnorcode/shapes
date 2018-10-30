@@ -8,7 +8,7 @@ import android.arch.persistence.room.PrimaryKey;
  * Created by xnorcode on 30/10/2018.
  */
 @Entity(tableName = "actions")
-public class EditorAction {
+public class EditorAction implements Comparable {
 
     @PrimaryKey
     @ColumnInfo(name = "id")
@@ -72,5 +72,12 @@ public class EditorAction {
         return action.getId() == this.id
                 && action.getType() == this.type
                 && action.getShapeId() == this.shapeId;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (o == null) return 0;
+        EditorAction action = (EditorAction) o;
+        return Integer.compare(this.id, action.getId());
     }
 }
