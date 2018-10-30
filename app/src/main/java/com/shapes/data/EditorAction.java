@@ -15,13 +15,13 @@ public class EditorAction {
     private int id;
 
     @ColumnInfo(name = "type")
-    @SHAPE_TYPE
+    @EDITOR_ACTION
     private int type;
 
     @ColumnInfo(name = "shapeId")
     private int shapeId;
 
-    public EditorAction(int id, @SHAPE_TYPE int type, int shapeId) {
+    public EditorAction(int id, @EDITOR_ACTION int type, int shapeId) {
         this.id = id;
         this.type = type;
         this.shapeId = shapeId;
@@ -35,11 +35,12 @@ public class EditorAction {
         this.id = id;
     }
 
+    @EDITOR_ACTION
     public int getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(@EDITOR_ACTION int type) {
         this.type = type;
     }
 
