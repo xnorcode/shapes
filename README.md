@@ -1,2 +1,2 @@
-# shapes
-A small shapes game, enjoy!
+# shapes game
+A small shapes game on android, enjoy!
