@@ -254,6 +254,26 @@ public class EditorPresenter implements EditorContract.Presenter {
 
 
     @Override
+    public void clearEditor() {
+        compositeDisposable.clear();
+        compositeDisposable.add(shapeRepository.clear()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(status -> {
+                            // remove all shapes from canvas
+                            view.removeAllShapes();
+
+                            // deallocate all grids
+                            usedGrids.clear();
+
+                            // clear all user actions
+                            editorActionsTaken.clear();
+                        },
+                        t -> view.showNotification("Could not clear the canvas. Please restart app.")));
+    }
+
+
+    @Override
     public void setView(EditorContract.View view) {
         this.view = view;
     }
