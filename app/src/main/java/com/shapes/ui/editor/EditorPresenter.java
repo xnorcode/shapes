@@ -100,6 +100,8 @@ public class EditorPresenter implements EditorContract.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(shape -> view.drawShape(shape),
                         t -> view.showNotification("Blank canvas!")));
+
+        // TODO: 30/10/2018 load editor actions
     }
 
 
