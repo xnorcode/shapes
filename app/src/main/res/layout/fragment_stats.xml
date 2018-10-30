@@ -3,4 +3,5 @@
                                         android:id="@+id/statsRecyclerView"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
+                                        android:background="@color/veryLightGrey"
                                         android:padding="@dimen/stats_recycler_view_padding"/>
