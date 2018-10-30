@@ -26,9 +26,9 @@ public interface EditorContract {
         /**
          * Remove a shape from canvas
          *
-         * @param viewIndex The index of the shape's view on canvas
+         * @param id The id of the shape
          */
-        void removeShapeAt(int viewIndex);
+        void removeShape(int id);
 
 
         /**
