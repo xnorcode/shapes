@@ -156,9 +156,10 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
 
 
     @Override
-    public void removeShapeAt(int viewIndex) {
+    public void removeShape(int id) {
         // remove view with
-        canvas.removeViewAt(viewIndex);
+        canvas.removeView(canvas.findViewWithTag(id));
+
     }
 
 
@@ -202,12 +203,9 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
         shapeView.onLongClick(v -> false);
 
 
-        // TODO: 29/10/2018 Remove shape on longClick()
+        // TODO: 29/10/2018 Remove shape on longClick() and include action to undo stack
 
-        // TODO: 29/10/2018 undo deletion of the shape
-
-        // add view to canvas
-        canvas.addView(shapeView.getView(), shape.getId() - 1);
+        canvas.addView(shapeView.getView());
 
         // return index of added view on canvas
         return canvas.indexOfChild(shapeView.getView());
