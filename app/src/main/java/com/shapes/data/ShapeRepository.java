@@ -213,7 +213,7 @@ public class ShapeRepository implements ShapeDataSource {
         return Single.<Boolean>create(emitter -> {
 
             // delete all from db
-            shapeLocalDataSource.deleteShapes();
+            shapeLocalDataSource.deleteActions();
 
             // add all action
             shapeLocalDataSource.insertActions(actions);
