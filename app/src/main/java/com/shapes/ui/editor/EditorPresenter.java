@@ -15,6 +15,7 @@ import java.util.Stack;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -90,6 +91,15 @@ public class EditorPresenter implements EditorContract.Presenter {
     @Override
     public void init(int grids) {
         this.grids = grids;
+
+        // check if any shapes saved in db
+        compositeDisposable.add(shapeRepository.load()
+                .toObservable()
+                .flatMap(Observable::fromIterable)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(shape -> view.drawShape(shape),
+                        t -> view.showNotification("Blank canvas!")));
     }
 
 
