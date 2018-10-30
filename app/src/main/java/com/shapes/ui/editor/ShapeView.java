@@ -9,6 +9,14 @@ public interface ShapeView {
 
 
     /**
+     * Tag shape view by shape id
+     *
+     * @param id The shape id
+     */
+    void tag(int id);
+
+
+    /**
      * Sets the paint color for the shape
      *
      * @param color The rgb color

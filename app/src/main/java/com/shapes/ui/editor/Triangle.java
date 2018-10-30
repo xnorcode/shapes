@@ -44,6 +44,11 @@ public class Triangle extends View implements ShapeView {
 
 
     @Override
+    public void tag(int id) {
+        setTag(id);
+    }
+
+    @Override
     public void setColor(int color) {
         paint.setColor(color);
     }
