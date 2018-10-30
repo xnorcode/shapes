@@ -1,10 +1,12 @@
 package com.shapes.ui.editor;
 
+import android.util.Log;
+
 import com.shapes.data.SHAPE_TYPE;
 import com.shapes.data.Shape;
+import com.shapes.data.ShapeDataSource;
 
 import java.util.AbstractMap;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
@@ -31,6 +33,12 @@ public class EditorPresenter implements EditorContract.Presenter {
 
 
     /**
+     * Tag used for debugging
+     */
+    private static final String TAG = EditorPresenter.class.getName();
+
+
+    /**
      * The grid capacity
      */
     private int grids;
@@ -40,12 +48,6 @@ public class EditorPresenter implements EditorContract.Presenter {
      * Ref. to the view
      */
     private EditorContract.View view;
-
-
-    /**
-     * Cache of all shapes currently shown on canvas
-     */
-    private Map<Integer, Shape> shapesCache;
 
 
     /**
@@ -69,12 +71,18 @@ public class EditorPresenter implements EditorContract.Presenter {
     private CompositeDisposable compositeDisposable;
 
 
+    /**
+     * Shape Data Repository
+     */
+    private ShapeDataSource shapeRepository;
+
+
     @Inject
-    public EditorPresenter() {
+    public EditorPresenter(ShapeDataSource shapeRepository) {
         this.compositeDisposable = new CompositeDisposable();
         this.usedGrids = new HashSet<>();
         this.editorActionsTaken = new Stack<>();
-        this.shapesCache = new HashMap<>();
+        this.shapeRepository = shapeRepository;
     }
 
 
@@ -86,20 +94,16 @@ public class EditorPresenter implements EditorContract.Presenter {
 
     @Override
     public void generateShape(int type) {
-        compositeDisposable.clear();
         compositeDisposable.add(Single.<Shape>create(emitter -> {
 
             // find a random slot on canvas grid
             int gridIndex = getRandomGrid();
 
             // if grid full return
-            if (gridIndex == -1) {
-                emitter.onError(new Exception("Editor is full!"));
-                return;
-            }
+            if (gridIndex == -1) emitter.onError(new Exception("Editor is full!"));
 
             // create new shape
-            Shape shape = new Shape(shapesCache.size() + 1, type);
+            Shape shape = new Shape(gridIndex, type);
 
             // set shape a random color
             shape.setColor(generateRandomColor());
@@ -112,42 +116,81 @@ public class EditorPresenter implements EditorContract.Presenter {
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(shape -> {
+                .map(shape -> {
                     // show on screen
-                    int index = view.drawShape(shape);
-
-                    // usedGrids index on shape
-                    shape.setViewIndex(index);
+                    view.drawShape(shape);
 
                     // save editor action in stack
                     editorActionsTaken.push(new AbstractMap.SimpleEntry<>(EDITOR_ADD_SHAPE, shape.getId()));
 
-                    // save shape in cache
-                    shapesCache.put(shape.getId(), shape);
-
-                }, throwable -> view.showNotification(throwable.getMessage())));
+                    return shape;
+                })
+                .observeOn(Schedulers.io())
+                .flatMap(shape -> shapeRepository.save(shape))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(status -> {
+                    Log.d(TAG, "New shape added successfully");
+                }, t -> {
+                    view.showNotification(t.getMessage());
+                    Log.d(TAG, "A new shape was not added because: " + t.getMessage());
+                }));
     }
 
 
     @Override
+    public void deleteShape(int id) {
+        compositeDisposable.add(shapeRepository.find(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(shape -> {
+                    // remove view from canvas
+                    view.removeShape(shape.getId());
+
+                    // deallocate grid
+                    usedGrids.remove(shape.getGridIndex());
+
+                    return shape;
+                })
+                .observeOn(Schedulers.io())
+                .flatMap(shape -> shapeRepository.delete(shape.getId()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(status -> {
+                    Log.d(TAG, "Shape was removed successfully");
+                }, t -> {
+                    Log.d(TAG, "Shape was not removed because: " + t.getMessage());
+                }));
+    }
+
+    @Override
     public void swapShape(int id, boolean revert) {
+        compositeDisposable.add(shapeRepository.find(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(shape -> {
+                    // swap shape type
+                    shape.setType(swapShapeType(shape.getType(), revert));
 
-        // get shape from cache
-        Shape shape = shapesCache.get(id);
+                    // remove old shape
+                    view.removeShape(shape.getId());
 
-        // swap shape type
-        shape.setType(swapShapeType(shape.getType(), revert));
+                    // show new shape
+                    view.drawShape(shape);
 
-        // remove old shape
-        view.removeShapeAt(shape.getViewIndex());
+                    // save editor action in stack
+                    if (!revert)
+                        editorActionsTaken.push(new AbstractMap.SimpleEntry<>(EDITOR_SWAP_SHAPE,
+                                shape.getId()));
 
-        // generate new shape
-        shape.setViewIndex(view.drawShape(shape));
-
-        // save editor action in stack
-        if (!revert)
-            editorActionsTaken.push(new AbstractMap.SimpleEntry<>(EDITOR_SWAP_SHAPE,
-                    shape.getId()));
+                    return shape;
+                })
+                .observeOn(Schedulers.io())
+                .flatMap(shape -> shapeRepository.update(shape))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(status -> {
+                    Log.d(TAG, "Shape was updated successfully");
+                }, t -> {
+                    Log.d(TAG, "Shape was not updated because: " + t.getMessage());
+                }));
     }
 
     @Override
@@ -162,17 +205,8 @@ public class EditorPresenter implements EditorContract.Presenter {
         switch (action.getKey()) {
 
             case EDITOR_ADD_SHAPE:
-                // get last added shape
-                Shape shape = shapesCache.get(action.getValue());
-
-                // remove view from canvas
-                view.removeShapeAt(shape.getViewIndex());
-
-                // deallocate grid
-                usedGrids.remove(shape.getGridIndex());
-
-                // delete from cache
-                shapesCache.remove(shape.getId());
+                // delete last added shape
+                deleteShape(action.getValue());
                 break;
 
             case EDITOR_SWAP_SHAPE:
@@ -217,8 +251,6 @@ public class EditorPresenter implements EditorContract.Presenter {
      * @return Random grid index
      */
     private int getRandomGrid() {
-
-        // TODO: 28/10/2018 exclude slots used
         // get a random index
         Random random = new Random();
         int slot = random.nextInt(grids) + 1;
