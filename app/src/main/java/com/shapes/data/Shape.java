@@ -5,6 +5,9 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
+import static com.shapes.utils.Constants.SHAPE_NAME_CIRCLE;
+import static com.shapes.utils.Constants.SHAPE_NAME_SQUARE;
+import static com.shapes.utils.Constants.SHAPE_NAME_TRIANGLE;
 import static com.shapes.utils.Constants.SHAPE_TYPE_CIRCLE;
 import static com.shapes.utils.Constants.SHAPE_TYPE_SQUARE;
 import static com.shapes.utils.Constants.SHAPE_TYPE_TRIANGLE;
@@ -94,24 +97,26 @@ public class Shape {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("SHAPE with id: ");
-        sb.append(id);
-        sb.append(", type: ");
+        StringBuilder sb = new StringBuilder("Shape with id: ");
+        sb.append(id).append(", type: ");
+
         switch (type) {
             case SHAPE_TYPE_SQUARE:
-                sb.append("square");
+                sb.append(SHAPE_NAME_SQUARE);
                 break;
             case SHAPE_TYPE_CIRCLE:
-                sb.append("circle");
+                sb.append(SHAPE_NAME_CIRCLE);
                 break;
             case SHAPE_TYPE_TRIANGLE:
-                sb.append("triangle");
+                sb.append(SHAPE_NAME_TRIANGLE);
                 break;
         }
-        sb.append(", color: ");
-        sb.append(color);
-        sb.append(", at grid: #");
-        sb.append(gridIndex);
+
+        sb.append(", color: ")
+                .append(color)
+                .append(", at grid: #")
+                .append(gridIndex);
+
         return sb.toString();
     }
 }
