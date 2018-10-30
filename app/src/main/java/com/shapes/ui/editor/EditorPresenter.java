@@ -317,7 +317,6 @@ public class EditorPresenter implements EditorContract.Presenter {
     public void dropView() {
         view = null;
         if (compositeDisposable != null) compositeDisposable.clear();
-        compositeDisposable = null;
     }
 
 

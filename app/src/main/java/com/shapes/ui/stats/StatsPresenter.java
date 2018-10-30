@@ -111,6 +111,7 @@ public class StatsPresenter implements StatsContract.Presenter {
     @Override
     public void dropView() {
         view = null;
+        if (compositeDisposable != null) compositeDisposable.clear();
     }
 
 
