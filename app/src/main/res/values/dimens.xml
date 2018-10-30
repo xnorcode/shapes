@@ -9,4 +9,9 @@
     <dimen name="editor_fragment_bottom_controls_button_undo_width">24dp</dimen>
     <dimen name="shape_size">100dp</dimen>
 
+    <!-- Stats Activity Dimens -->
+    <dimen name="stats_recycler_view_padding">8dp</dimen>
+    <dimen name="stats_recycler_view_item_height">50dp</dimen>
+
+
 </resources>
