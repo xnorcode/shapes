@@ -5,6 +5,10 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
+import static com.shapes.utils.Constants.SHAPE_TYPE_CIRCLE;
+import static com.shapes.utils.Constants.SHAPE_TYPE_SQUARE;
+import static com.shapes.utils.Constants.SHAPE_TYPE_TRIANGLE;
+
 /**
  * Created by xnorcode on 27/10/2018.
  */
@@ -86,5 +90,28 @@ public class Shape {
                 && shape.getType() == this.type
                 && shape.getColor() == this.color
                 && shape.getGridIndex() == this.gridIndex;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("SHAPE with id: ");
+        sb.append(id);
+        sb.append(", type: ");
+        switch (type) {
+            case SHAPE_TYPE_SQUARE:
+                sb.append("square");
+                break;
+            case SHAPE_TYPE_CIRCLE:
+                sb.append("circle");
+                break;
+            case SHAPE_TYPE_TRIANGLE:
+                sb.append("triangle");
+                break;
+        }
+        sb.append(", color: ");
+        sb.append(color);
+        sb.append(", at grid: #");
+        sb.append(gridIndex);
+        return sb.toString();
     }
 }
