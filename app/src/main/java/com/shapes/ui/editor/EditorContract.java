@@ -98,6 +98,12 @@ public interface EditorContract {
 
 
         /**
+         * Save all editor actions
+         */
+        void persistActions();
+
+
+        /**
          * Clears all shapes from editor
          */
         void clearEditor();

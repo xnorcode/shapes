@@ -114,6 +114,9 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
     public void onStop() {
         super.onStop();
 
+        // persist editor user actions
+        presenter.persistActions();
+
         // unbind view
         presenter.dropView();
     }

@@ -2,13 +2,14 @@ package com.shapes.ui.editor;
 
 import android.util.Log;
 
+import com.shapes.data.EditorAction;
 import com.shapes.data.SHAPE_TYPE;
 import com.shapes.data.Shape;
 import com.shapes.data.ShapeDataSource;
 
-import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
@@ -54,11 +55,8 @@ public class EditorPresenter implements EditorContract.Presenter {
 
     /**
      * All editor actions taken
-     * <p>
-     * Pair Key: Editor Action
-     * Pair Value: Shape ID
      */
-    private Stack<Map.Entry<Integer, Integer>> editorActionsTaken;
+    private Stack<EditorAction> editorActionsTaken;
 
 
     /**
@@ -101,7 +99,20 @@ public class EditorPresenter implements EditorContract.Presenter {
                 .subscribe(shape -> view.drawShape(shape),
                         t -> view.showNotification("Blank canvas!")));
 
-        // TODO: 30/10/2018 load editor actions
+        compositeDisposable.add(shapeRepository.loadActions()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(actions -> {
+
+                    // sort actions list in accending order
+                    // based on their id
+                    Collections.sort(actions);
+
+                    // push actions in stack
+                    for (EditorAction action : actions) {
+                        editorActionsTaken.push(action);
+                    }
+                }));
     }
 
 
@@ -148,7 +159,7 @@ public class EditorPresenter implements EditorContract.Presenter {
         view.drawShape(shape);
 
         // save editor action in stack
-        editorActionsTaken.push(new AbstractMap.SimpleEntry<>(EDITOR_ADD_SHAPE, shape.getId()));
+        editorActionsTaken.push(new EditorAction(shape.getId(), EDITOR_ADD_SHAPE, shape.getId()));
 
         // persist in db
         compositeDisposable.add(shapeRepository.save(shape)
@@ -174,7 +185,7 @@ public class EditorPresenter implements EditorContract.Presenter {
 
                     // save action if done by user
                     if (userAction) {
-                        editorActionsTaken.push(new AbstractMap.SimpleEntry<>(EDITOR_REMOVE_SHAPE,
+                        editorActionsTaken.push(new EditorAction(shape.getId(), EDITOR_REMOVE_SHAPE,
                                 shape.getId()));
 
                         // return shape
@@ -217,7 +228,7 @@ public class EditorPresenter implements EditorContract.Presenter {
 
                     // save editor action in stack
                     if (!revert)
-                        editorActionsTaken.push(new AbstractMap.SimpleEntry<>(EDITOR_SWAP_SHAPE,
+                        editorActionsTaken.push(new EditorAction(shape.getId(), EDITOR_SWAP_SHAPE,
                                 shape.getId()));
 
                     return shape;
@@ -236,24 +247,24 @@ public class EditorPresenter implements EditorContract.Presenter {
         if (editorActionsTaken.size() == 0) return;
 
         // get latest action
-        Map.Entry<Integer, Integer> action = editorActionsTaken.pop();
+        EditorAction action = editorActionsTaken.pop();
 
         // undo based on action type
-        switch (action.getKey()) {
+        switch (action.getType()) {
 
             case EDITOR_ADD_SHAPE:
                 // delete last added shape
-                deleteShape(action.getValue(), false);
+                deleteShape(action.getShapeId(), false);
                 break;
 
             case EDITOR_SWAP_SHAPE:
                 // revert type swap
-                swapShape(action.getValue(), true);
+                swapShape(action.getShapeId(), true);
                 break;
 
             case EDITOR_REMOVE_SHAPE:
                 // add shape back
-                compositeDisposable.add(shapeRepository.find(action.getValue())
+                compositeDisposable.add(shapeRepository.find(action.getShapeId())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(shape -> {
@@ -266,9 +277,20 @@ public class EditorPresenter implements EditorContract.Presenter {
 
 
     @Override
+    public void persistActions() {
+        compositeDisposable.add(shapeRepository.saveActions(new ArrayList<>(editorActionsTaken))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(status -> Log.d(TAG, "All editor actions where saved!"),
+                        t -> Log.d(TAG, "Could not save editor actions")));
+    }
+
+
+    @Override
     public void clearEditor() {
         compositeDisposable.clear();
         compositeDisposable.add(shapeRepository.clear()
+                .flatMap(status -> shapeRepository.clearActions())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(status -> {
