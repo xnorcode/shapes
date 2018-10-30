@@ -2,4 +2,5 @@
     <string name="app_name">shapes</string>
 
     <string name="editor_settings_action_title">Editor Settings</string>
+    <string name="editor_delete_action_title">Delete All</string>
 </resources>

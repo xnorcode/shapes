@@ -50,11 +50,19 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO: 29/10/2018 Show Delete All button
+
+        // start stats activity
         if (item.getItemId() == R.id.editor_settings_action) {
             startActivity(new Intent(getContext(), StatsActivity.class));
             return true;
         }
+
+        // clear canvas
+        if (item.getItemId() == R.id.editor_delete_all_action) {
+            presenter.clearEditor();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -105,8 +113,9 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
     @Override
     public void onStop() {
         super.onStop();
-        if (presenter != null) presenter.dropView();
-        presenter = null;
+
+        // unbind view
+        presenter.dropView();
     }
 
 
@@ -157,9 +166,16 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
 
     @Override
     public void removeShape(int id) {
-        // remove view with
+        // remove view by tag
         canvas.removeView(canvas.findViewWithTag(id));
 
+    }
+
+
+    @Override
+    public void removeAllShapes() {
+        // remove all views from canvas
+        canvas.removeAllViews();
     }
 
 

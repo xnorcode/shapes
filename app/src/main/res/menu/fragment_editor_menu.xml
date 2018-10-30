@@ -3,6 +3,12 @@
       xmlns:tools="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/editor_delete_all_action"
+        android:icon="@drawable/ic_delete"
+        android:title="@string/editor_delete_action_title"
+        tools:showAsAction="always"/>
+
+    <item
         android:id="@+id/editor_settings_action"
         android:icon="@drawable/ic_settings"
         android:title="@string/editor_settings_action_title"

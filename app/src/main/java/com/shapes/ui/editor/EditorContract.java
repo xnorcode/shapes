@@ -31,6 +31,12 @@ public interface EditorContract {
 
 
         /**
+         * remove all shapes from canvas
+         */
+        void removeAllShapes();
+
+
+        /**
          * Display user notification
          *
          * @param msg The message to display
@@ -89,6 +95,12 @@ public interface EditorContract {
          * Undo last action
          */
         void undoAction();
+
+
+        /**
+         * Clears all shapes from editor
+         */
+        void clearEditor();
 
     }
 }
