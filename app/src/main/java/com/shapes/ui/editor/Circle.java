@@ -80,6 +80,6 @@ public class Circle extends View implements ShapeView {
 
     @Override
     public View getView() {
-        return getView();
+        return this;
     }
 }
