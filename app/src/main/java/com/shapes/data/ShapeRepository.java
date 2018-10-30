@@ -16,17 +16,20 @@ import io.reactivex.Single;
  * Created by xnorcode on 29/10/2018.
  */
 @Singleton
-public class ShapeRepository implements ShapeDataSource {
+public class ShapeRepository implements ShapeDataSource, EditorActionDataSource {
 
     private DbHelper shapeLocalDataSource;
 
     Map<Integer, Shape> shapesCache;
+
+    Map<Integer, EditorAction> actionsCache;
 
 
     @Inject
     public ShapeRepository(DbHelper shapeLocalDataSource) {
         this.shapeLocalDataSource = shapeLocalDataSource;
         this.shapesCache = new HashMap<>();
+        this.actionsCache = new HashMap<>();
     }
 
 
@@ -150,6 +153,104 @@ public class ShapeRepository implements ShapeDataSource {
 
             // clear cache
             shapesCache.clear();
+
+            // proceed
+            emitter.onSuccess(true);
+        });
+    }
+
+    @Override
+    public Single<List<EditorAction>> loadActions() {
+        // check cache first
+        if (!actionsCache.isEmpty()) {
+            return Single.just(new ArrayList<EditorAction>(actionsCache.values()));
+        }
+
+        return Single.<List<EditorAction>>create(emitter -> {
+            // get from db
+            List<EditorAction> actions = shapeLocalDataSource.getActions();
+
+            // error check
+            if (actions == null)
+                emitter.onError(new Exception("Error loading latest editor actions..."));
+
+            // cache all actions
+            for (EditorAction action : actions) {
+                if (!actionsCache.containsKey(action.getId())) {
+                    actionsCache.put(action.getId(), action);
+                }
+            }
+
+            // proceed
+            emitter.onSuccess(actions);
+        });
+    }
+
+    @Override
+    public Single<EditorAction> findAction(int id) {
+        // check cache first
+        if (!actionsCache.isEmpty() && actionsCache.containsKey(id)) {
+            return Single.just(actionsCache.get(id));
+        }
+
+        return Single.<EditorAction>create(emitter -> {
+            // get from db
+            EditorAction action = shapeLocalDataSource.getAction(id);
+
+            // error check
+            if (action == null) emitter.onError(new Exception("Could not find action..."));
+
+            // cache action
+            actionsCache.put(action.getId(), action);
+
+            // proceed
+            emitter.onSuccess(action);
+        });
+    }
+
+    @Override
+    public Single<Boolean> saveActions(List<EditorAction> actions) {
+        return Single.<Boolean>create(emitter -> {
+
+            // delete all from db
+            shapeLocalDataSource.deleteShapes();
+
+            // add all action
+            shapeLocalDataSource.insertActions(actions);
+
+            // cache actions
+            actionsCache.clear();
+            for (EditorAction action : actions) {
+                actionsCache.put(action.getId(), action);
+            }
+
+            // proceed
+            emitter.onSuccess(true);
+        });
+    }
+
+    @Override
+    public Single<Boolean> clearActions() {
+        return Single.<Boolean>create(emitter -> {
+            // clear actions db
+            shapeLocalDataSource.deleteActions();
+
+            // clear cache
+            actionsCache.clear();
+
+            // proceed
+            emitter.onSuccess(true);
+        });
+    }
+
+    @Override
+    public Single<Boolean> deleteAction(int id) {
+        return Single.<Boolean>create(emitter -> {
+            // delete action
+            shapeLocalDataSource.deleteAction(id);
+
+            // remove from cache
+            actionsCache.remove(id);
 
             // proceed
             emitter.onSuccess(true);
