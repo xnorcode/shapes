@@ -25,9 +25,6 @@ public class Shape {
     @ColumnInfo(name = "gridIndex")
     private int gridIndex;
 
-    @ColumnInfo(name = "viewIndex")
-    private int viewIndex;
-
     public Shape(int id) {
         this.id = id;
     }
@@ -67,14 +64,6 @@ public class Shape {
         this.gridIndex = gridIndex;
     }
 
-    public int getViewIndex() {
-        return viewIndex;
-    }
-
-    public void setViewIndex(int viewIndex) {
-        this.viewIndex = viewIndex;
-    }
-
     @Override
     public int hashCode() {
         int result = 17;
@@ -82,7 +71,6 @@ public class Shape {
         result = 31 * result + type;
         result = 31 * result + color;
         result = 31 * result + gridIndex;
-        result = 31 * result + viewIndex;
         return result;
     }
 
@@ -97,7 +85,6 @@ public class Shape {
         return shape.getId() == this.id
                 && shape.getType() == this.type
                 && shape.getColor() == this.color
-                && shape.getGridIndex() == this.gridIndex
-                && shape.getViewIndex() == this.viewIndex;
+                && shape.getGridIndex() == this.gridIndex;
     }
 }
