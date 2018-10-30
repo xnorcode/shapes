@@ -16,7 +16,7 @@ import io.reactivex.Single;
  * Created by xnorcode on 29/10/2018.
  */
 @Singleton
-public class ShapeRepository implements ShapeDataSource, EditorActionDataSource {
+public class ShapeRepository implements ShapeDataSource {
 
     private DbHelper shapeLocalDataSource;
 

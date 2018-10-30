@@ -69,4 +69,47 @@ public interface ShapeDataSource {
      * @return Observable of the deletion status
      */
     Single<Boolean> clear();
+
+
+    /**
+     * Gets all actions
+     *
+     * @return list of actions in single
+     */
+    Single<List<EditorAction>> loadActions();
+
+
+    /**
+     * Get action by id
+     *
+     * @param id action id
+     * @return action in single
+     */
+    Single<EditorAction> findAction(int id);
+
+
+    /**
+     * save all actions
+     *
+     * @param actions list of actions
+     * @return status
+     */
+    Single<Boolean> saveActions(List<EditorAction> actions);
+
+
+    /**
+     * Deletes all actions
+     *
+     * @return status
+     */
+    Single<Boolean> clearActions();
+
+
+    /**
+     * Deletes action by id
+     *
+     * @param id the action id
+     * @return status
+     */
+    Single<Boolean> deleteAction(int id);
 }
