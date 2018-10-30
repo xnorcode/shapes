@@ -134,23 +134,23 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
 
 
     @Override
-    public int drawShape(Shape shape) {
+    public void drawShape(Shape shape) {
         switch (shape.getType()) {
 
             case SHAPE_TYPE_SQUARE:
-                // add shape view to canvas and return its index
-                return addViewToCanvas(new Square(getContext()), shape);
+                // add shape view to canvas
+                addViewToCanvas(new Square(getContext()), shape);
+                break;
 
             case SHAPE_TYPE_CIRCLE:
-                // add shape view to canvas and return its index
-                return addViewToCanvas(new Circle(getContext()), shape);
+                // add shape view to canvas
+                addViewToCanvas(new Circle(getContext()), shape);
+                break;
 
             case SHAPE_TYPE_TRIANGLE:
-                // add shape view to canvas and return its index
-                return addViewToCanvas(new Triangle(getContext()), shape);
-
-            default:
-                return 0;
+                // add shape view to canvas
+                addViewToCanvas(new Triangle(getContext()), shape);
+                break;
         }
     }
 
@@ -180,9 +180,11 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
      *
      * @param shapeView The shapes view interface
      * @param shape     The shape data model
-     * @return The canvas view index of added shape view
      */
-    private int addViewToCanvas(ShapeView shapeView, Shape shape) {
+    private void addViewToCanvas(ShapeView shapeView, Shape shape) {
+
+        // tag view with id
+        shapeView.tag(shape.getId());
 
         // set color
         shapeView.setColor(shape.getColor());
@@ -200,14 +202,10 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
             presenter.swapShape(shape.getId(), false);
         });
 
+        // TODO: 29/10/2018 Remove shape on longClick() and include action to undo stack
         shapeView.onLongClick(v -> false);
 
-
-        // TODO: 29/10/2018 Remove shape on longClick() and include action to undo stack
-
+        // add to canvas
         canvas.addView(shapeView.getView());
-
-        // return index of added view on canvas
-        return canvas.indexOfChild(shapeView.getView());
     }
 }

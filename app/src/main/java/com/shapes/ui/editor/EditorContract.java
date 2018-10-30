@@ -18,9 +18,8 @@ public interface EditorContract {
          * Draw the new shape on canvas
          *
          * @param shape The new Shape object to draw
-         * @return The index of the shape's view on canvas
          */
-        int drawShape(Shape shape);
+        void drawShape(Shape shape);
 
 
         /**
