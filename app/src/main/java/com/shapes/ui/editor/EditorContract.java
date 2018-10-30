@@ -60,11 +60,20 @@ public interface EditorContract {
 
 
         /**
+         * Add shape to view
+         *
+         * @param shape The shape to add
+         */
+        void addShape(Shape shape);
+
+
+        /**
          * Delete a shape
          *
-         * @param id The shape's id
+         * @param id         The shape's id
+         * @param userAction Enable if triggered by user
          */
-        void deleteShape(int id);
+        void deleteShape(int id, boolean userAction);
 
 
         /**

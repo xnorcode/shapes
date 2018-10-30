@@ -21,6 +21,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.shapes.utils.Constants.EDITOR_ADD_SHAPE;
+import static com.shapes.utils.Constants.EDITOR_REMOVE_SHAPE;
 import static com.shapes.utils.Constants.EDITOR_SWAP_SHAPE;
 import static com.shapes.utils.Constants.SHAPE_TYPE_CIRCLE;
 import static com.shapes.utils.Constants.SHAPE_TYPE_SQUARE;
@@ -116,17 +117,30 @@ public class EditorPresenter implements EditorContract.Presenter {
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(shape -> {
-                    // show on screen
-                    view.drawShape(shape);
+                .subscribe(shape -> {
 
-                    // save editor action in stack
-                    editorActionsTaken.push(new AbstractMap.SimpleEntry<>(EDITOR_ADD_SHAPE, shape.getId()));
+                    // add shape to UI
+                    addShape(shape);
 
-                    return shape;
-                })
-                .observeOn(Schedulers.io())
-                .flatMap(shape -> shapeRepository.save(shape))
+                    Log.d(TAG, "A new shape was generated");
+                }, t -> {
+                    view.showNotification(t.getMessage());
+                    Log.d(TAG, "Could not generate new shape because: " + t.getMessage());
+                }));
+    }
+
+    @Override
+    public void addShape(Shape shape) {
+
+        // show on screen
+        view.drawShape(shape);
+
+        // save editor action in stack
+        editorActionsTaken.push(new AbstractMap.SimpleEntry<>(EDITOR_ADD_SHAPE, shape.getId()));
+
+        // persist in db
+        compositeDisposable.add(shapeRepository.save(shape)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(status -> {
                     Log.d(TAG, "New shape added successfully");
@@ -136,15 +150,24 @@ public class EditorPresenter implements EditorContract.Presenter {
                 }));
     }
 
-
     @Override
-    public void deleteShape(int id) {
+    public void deleteShape(int id, boolean userAction) {
         compositeDisposable.add(shapeRepository.find(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(shape -> {
+
                     // remove view from canvas
                     view.removeShape(shape.getId());
+
+                    // save action if done by user
+                    if (userAction) {
+                        editorActionsTaken.push(new AbstractMap.SimpleEntry<>(EDITOR_REMOVE_SHAPE,
+                                shape.getId()));
+
+                        // return shape
+                        return shape;
+                    }
 
                     // deallocate grid
                     usedGrids.remove(shape.getGridIndex());
@@ -152,7 +175,11 @@ public class EditorPresenter implements EditorContract.Presenter {
                     return shape;
                 })
                 .observeOn(Schedulers.io())
-                .flatMap(shape -> shapeRepository.delete(shape.getId()))
+                .flatMap(shape -> {
+                    // do not delete from db if action by user
+                    if (userAction) return Single.just(true);
+                    return shapeRepository.delete(shape.getId());
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(status -> {
                     Log.d(TAG, "Shape was removed successfully");
@@ -186,15 +213,13 @@ public class EditorPresenter implements EditorContract.Presenter {
                 .observeOn(Schedulers.io())
                 .flatMap(shape -> shapeRepository.update(shape))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(status -> {
-                    Log.d(TAG, "Shape was updated successfully");
-                }, t -> {
-                    Log.d(TAG, "Shape was not updated because: " + t.getMessage());
-                }));
+                .subscribe(status -> Log.d(TAG, "Shape was updated successfully"),
+                        t -> Log.d(TAG, "Shape was not updated because: " + t.getMessage())));
     }
 
     @Override
     public void undoAction() {
+
         // exit if no actions
         if (editorActionsTaken.size() == 0) return;
 
@@ -206,12 +231,23 @@ public class EditorPresenter implements EditorContract.Presenter {
 
             case EDITOR_ADD_SHAPE:
                 // delete last added shape
-                deleteShape(action.getValue());
+                deleteShape(action.getValue(), false);
                 break;
 
             case EDITOR_SWAP_SHAPE:
                 // revert type swap
                 swapShape(action.getValue(), true);
+                break;
+
+            case EDITOR_REMOVE_SHAPE:
+                // add shape back
+                compositeDisposable.add(shapeRepository.find(action.getValue())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(shape -> {
+                            // show on screen
+                            view.drawShape(shape);
+                        }, t -> Log.d(TAG, "There was na issue undo removal action..")));
                 break;
         }
     }

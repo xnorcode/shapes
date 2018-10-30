@@ -19,5 +19,6 @@ public class Constants {
      */
     public static final int EDITOR_ADD_SHAPE = 0;
     public static final int EDITOR_SWAP_SHAPE = 1;
+    public static final int EDITOR_REMOVE_SHAPE = 2;
 
 }

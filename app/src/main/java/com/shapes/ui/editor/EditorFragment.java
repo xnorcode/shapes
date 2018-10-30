@@ -202,8 +202,10 @@ public class EditorFragment extends DaggerFragment implements EditorContract.Vie
             presenter.swapShape(shape.getId(), false);
         });
 
-        // TODO: 29/10/2018 Remove shape on longClick() and include action to undo stack
-        shapeView.onLongClick(v -> false);
+        shapeView.onLongClick(v -> {
+            presenter.deleteShape(shape.getId(), true);
+            return true;
+        });
 
         // add to canvas
         canvas.addView(shapeView.getView());
