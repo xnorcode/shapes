@@ -112,4 +112,13 @@ public interface ShapeDataSource {
      * @return status
      */
     Single<Boolean> deleteAction(int id);
+
+
+    /**
+     * Deletes all given actions
+     *
+     * @param ids A list with all action id's to be deleted
+     * @return Observable of deletion status
+     */
+    Single<Boolean> deleteActions(List<Integer> ids);
 }

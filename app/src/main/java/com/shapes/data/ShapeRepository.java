@@ -256,4 +256,22 @@ public class ShapeRepository implements ShapeDataSource {
             emitter.onSuccess(true);
         });
     }
+
+    @Override
+    public Single<Boolean> deleteActions(List<Integer> ids) {
+        return Single.<Boolean>create(emitter -> {
+
+            for (int id : ids) {
+
+                // delete from db
+                shapeLocalDataSource.deleteShape(id);
+
+                // remove from cache
+                actionsCache.remove(id);
+            }
+
+            // proceed
+            emitter.onSuccess(true);
+        });
+    }
 }

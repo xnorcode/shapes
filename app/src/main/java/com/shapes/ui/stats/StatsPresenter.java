@@ -12,11 +12,15 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.shapes.utils.Constants.SHAPE_NAME_CIRCLE;
+import static com.shapes.utils.Constants.SHAPE_NAME_SQUARE;
+import static com.shapes.utils.Constants.SHAPE_NAME_TRIANGLE;
 import static com.shapes.utils.Constants.SHAPE_TYPE_CIRCLE;
 import static com.shapes.utils.Constants.SHAPE_TYPE_SQUARE;
 import static com.shapes.utils.Constants.SHAPE_TYPE_TRIANGLE;
@@ -72,6 +76,33 @@ public class StatsPresenter implements StatsContract.Presenter {
 
 
     @Override
+    public void deleteShapesOfType(String typeName) {
+
+        // get shape type to be deleted
+        int type = getShapeTypeFromName(typeName);
+
+        // get all ids to be deleted
+        compositeDisposable.add(shapeRepository.load()
+                .subscribeOn(Schedulers.io())
+                .toObservable()
+                .flatMap(Observable::fromIterable)
+                // filter per shape type
+                .filter(shape -> shape.getType() == type)
+                .map(Shape::getId)
+                .toList()
+                // delete actions and shapes from db
+                .flatMap(ids -> shapeRepository.delete(ids)
+                        .flatMap(v -> shapeRepository.deleteActions(ids)))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(status -> {
+                    Log.d(TAG, "Shape was removed");
+                    // refresh stats screen
+                    calculateStats();
+                }, t -> Log.d(TAG, "Shape was not removed")));
+    }
+
+
+    @Override
     public void setView(StatsContract.View view) {
         this.view = view;
     }
@@ -113,11 +144,31 @@ public class StatsPresenter implements StatsContract.Presenter {
 
         // add counts to list
         List<Map.Entry<String, String>> result = new ArrayList<>();
-        result.add(new AbstractMap.SimpleEntry<>("Square", String.valueOf(square)));
-        result.add(new AbstractMap.SimpleEntry<>("Circle", String.valueOf(circle)));
-        result.add(new AbstractMap.SimpleEntry<>("Triangle", String.valueOf(triangle)));
+        result.add(new AbstractMap.SimpleEntry<>(SHAPE_NAME_SQUARE, String.valueOf(square)));
+        result.add(new AbstractMap.SimpleEntry<>(SHAPE_NAME_CIRCLE, String.valueOf(circle)));
+        result.add(new AbstractMap.SimpleEntry<>(SHAPE_NAME_TRIANGLE, String.valueOf(triangle)));
 
         // return observable
         return Single.<List<Map.Entry<String, String>>>just(result);
+    }
+
+
+    /**
+     * Helper method to get type from shape name
+     *
+     * @param type The name of the shape
+     * @return Type of the shape
+     */
+    private int getShapeTypeFromName(String type) {
+        switch (type) {
+            case SHAPE_NAME_SQUARE:
+                return SHAPE_TYPE_SQUARE;
+            case SHAPE_NAME_CIRCLE:
+                return SHAPE_TYPE_CIRCLE;
+            case SHAPE_NAME_TRIANGLE:
+                return SHAPE_TYPE_TRIANGLE;
+            default:
+                return -1;
+        }
     }
 }
