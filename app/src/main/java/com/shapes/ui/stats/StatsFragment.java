@@ -69,9 +69,8 @@ public class StatsFragment extends DaggerFragment implements StatsContract.View 
     public void onStop() {
         super.onStop();
 
-        // remove presenter
-        if (presenter != null) presenter.dropView();
-        presenter = null;
+        // unbind view
+        presenter.dropView();
     }
 
     @Override
