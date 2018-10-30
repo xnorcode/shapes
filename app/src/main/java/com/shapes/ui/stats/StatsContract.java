@@ -19,9 +19,9 @@ public interface StatsContract {
          *
          * @param groupedShapes collection of number of shapes grouped by type
          *                      String: shape type name
-         *                      Integer: number of shapes
+         *                      String: number of shapes
          */
-        void showCounts(List<Map.Entry<String, Integer>> groupedShapes);
+        void showCounts(List<Map.Entry<String, String>> groupedShapes);
 
     }
 
