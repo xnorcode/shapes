@@ -33,5 +33,13 @@ public interface StatsContract {
          */
         void calculateStats();
 
+
+        /**
+         * delete all shapes of specific type
+         *
+         * @param typeName The shape type
+         */
+        void deleteShapesOfType(String typeName);
+
     }
 }

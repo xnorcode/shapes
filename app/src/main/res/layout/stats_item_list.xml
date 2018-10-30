@@ -19,4 +19,11 @@
         android:layout_weight="1"
         android:gravity="center"/>
 
+    <ImageButton
+        android:id="@+id/stats_item_delete"
+        android:layout_width="@dimen/stats_recycler_view_item_height"
+        android:layout_height="@dimen/stats_recycler_view_item_height"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_delete"/>
+
 </LinearLayout>

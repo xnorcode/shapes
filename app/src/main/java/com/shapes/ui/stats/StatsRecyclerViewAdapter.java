@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.shapes.R;
@@ -34,6 +35,9 @@ public class StatsRecyclerViewAdapter extends RecyclerView.Adapter<StatsRecycler
         @BindView(R.id.stats_item_count)
         TextView count;
 
+        @BindView(R.id.stats_item_delete)
+        ImageButton delete;
+
         public StatsRecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -45,11 +49,24 @@ public class StatsRecyclerViewAdapter extends RecyclerView.Adapter<StatsRecycler
     private List<Map.Entry<String, String>> groupedShapes;
 
 
+    private StatsContract.Presenter presenter;
+
+
     /**
      * Constructor used by dagger
      */
     @Inject
     public StatsRecyclerViewAdapter() {
+    }
+
+
+    /**
+     * Get ref to UI presenter
+     *
+     * @param presenter The Stats Activity Presenter
+     */
+    public void setPresenter(StatsContract.Presenter presenter) {
+        this.presenter = presenter;
     }
 
 
@@ -82,6 +99,11 @@ public class StatsRecyclerViewAdapter extends RecyclerView.Adapter<StatsRecycler
 
         // set count
         statsRecyclerViewHolder.count.setText(groupedShapes.get(i).getValue());
+
+        // set onClick listener to delete shapes
+        statsRecyclerViewHolder.delete.setOnClickListener(v -> {
+            presenter.deleteShapesOfType(groupedShapes.get(i).getKey());
+        });
     }
 
 

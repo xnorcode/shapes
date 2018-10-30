@@ -51,6 +51,9 @@ public class StatsFragment extends DaggerFragment implements StatsContract.View 
         // bind adapter to recycler view
         recyclerView.setAdapter(adapter);
 
+        // provide presenter ref to adapter
+        adapter.setPresenter(presenter);
+
         return rootView;
     }
 
