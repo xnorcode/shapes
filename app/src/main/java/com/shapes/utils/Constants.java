@@ -15,6 +15,14 @@ public class Constants {
 
 
     /**
+     * SHAPE NAMES
+     */
+    public static final String SHAPE_NAME_SQUARE = "Square";
+    public static final String SHAPE_NAME_CIRCLE = "Circle";
+    public static final String SHAPE_NAME_TRIANGLE = "Triangle";
+
+
+    /**
      * Editor Action Taken
      */
     public static final int EDITOR_ADD_SHAPE = 0;
