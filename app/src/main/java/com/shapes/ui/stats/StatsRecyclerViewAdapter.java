@@ -12,6 +12,8 @@ import com.shapes.R;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -40,19 +42,14 @@ public class StatsRecyclerViewAdapter extends RecyclerView.Adapter<StatsRecycler
     }
 
 
-    private List<Map.Entry<String, Integer>> groupedShapes;
-
-
-    private StatsContract.View view;
+    private List<Map.Entry<String, String>> groupedShapes;
 
 
     /**
-     * Constructor
-     *
-     * @param view Ref tot he view data will be displayed
+     * Constructor used by dagger
      */
-    public StatsRecyclerViewAdapter(StatsContract.View view) {
-        this.view = view;
+    @Inject
+    public StatsRecyclerViewAdapter() {
     }
 
 
@@ -61,19 +58,9 @@ public class StatsRecyclerViewAdapter extends RecyclerView.Adapter<StatsRecycler
      *
      * @param data New data to be shown in list
      */
-    public void swapData(List<Map.Entry<String, Integer>> data) {
+    public void swapData(List<Map.Entry<String, String>> data) {
         groupedShapes = data;
         notifyDataSetChanged();
-    }
-
-
-    /**
-     * Remove refs
-     */
-    public void destroy() {
-        view = null;
-        if (groupedShapes != null) groupedShapes.clear();
-        groupedShapes = null;
     }
 
 
@@ -94,7 +81,7 @@ public class StatsRecyclerViewAdapter extends RecyclerView.Adapter<StatsRecycler
         statsRecyclerViewHolder.caption.setText(groupedShapes.get(i).getKey());
 
         // set count
-        statsRecyclerViewHolder.count.setText(String.valueOf(groupedShapes.get(i).getValue()));
+        statsRecyclerViewHolder.count.setText(groupedShapes.get(i).getValue());
     }
 
 
