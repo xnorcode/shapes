@@ -63,8 +63,8 @@ public class ShapeLocalDataSource implements DbHelper {
     }
 
     @Override
-    public void saveActions(List<EditorAction> actions) {
-        actionDao.saveActions(actions);
+    public void insertActions(List<EditorAction> actions) {
+        actionDao.insertActions(actions);
     }
 
     @Override

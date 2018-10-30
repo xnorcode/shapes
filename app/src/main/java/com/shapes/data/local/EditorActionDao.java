@@ -22,7 +22,7 @@ public interface EditorActionDao {
     EditorAction getAction(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void saveActions(List<EditorAction> actions);
+    void insertActions(List<EditorAction> actions);
 
     @Query(" DELETE FROM actions")
     void deleteActions();

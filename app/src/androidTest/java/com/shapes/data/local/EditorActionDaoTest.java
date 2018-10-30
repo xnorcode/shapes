@@ -49,7 +49,7 @@ public class EditorActionDaoTest {
     @Test
     public void getActions() {
         // insert actions in db
-        database.getEditorActionDao().saveActions(actions);
+        database.getEditorActionDao().insertActions(actions);
 
         // get all actions
         List<EditorAction> actual = database.getEditorActionDao().getActions();
@@ -60,7 +60,7 @@ public class EditorActionDaoTest {
     @Test
     public void getAction() {
         // insert actions in db
-        database.getEditorActionDao().saveActions(actions);
+        database.getEditorActionDao().insertActions(actions);
 
         // get actions by id
         EditorAction actual = database.getEditorActionDao().getAction(action.getId());
@@ -71,7 +71,7 @@ public class EditorActionDaoTest {
     @Test
     public void deleteActions() {
         // insert actions in db
-        database.getEditorActionDao().saveActions(actions);
+        database.getEditorActionDao().insertActions(actions);
 
         // delete actions in db
         database.getEditorActionDao().deleteActions();
@@ -85,7 +85,7 @@ public class EditorActionDaoTest {
     @Test
     public void deleteAction() {
         // insert actions in db
-        database.getEditorActionDao().saveActions(actions);
+        database.getEditorActionDao().insertActions(actions);
 
         // delete action in db
         database.getEditorActionDao().deleteAction(action.getId());

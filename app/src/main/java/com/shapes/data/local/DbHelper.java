@@ -80,7 +80,7 @@ public interface DbHelper {
      *
      * @param actions a list of actions to save
      */
-    void saveActions(List<EditorAction> actions);
+    void insertActions(List<EditorAction> actions);
 
 
     /**
