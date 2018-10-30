@@ -107,8 +107,16 @@ public class ShapeRepositoryTest {
 
     @Test
     public void deleteAllShapes() {
+
+        // create a list with all shape ids
+        List<Integer> ids = new ArrayList<>();
+
+        for (Shape shape : shapes) {
+            ids.add(shape.getId());
+        }
+
         //call method and check status
-        shapeRepository.delete(shapes).test().assertValue(true);
+        shapeRepository.delete(ids).test().assertValue(true);
 
         // verify local data source method called once
         Mockito.verify(localDataSource).deleteShape(shape.getId());

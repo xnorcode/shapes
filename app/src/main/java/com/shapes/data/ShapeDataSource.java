@@ -57,10 +57,10 @@ public interface ShapeDataSource {
     /**
      * Deletes all given shapes
      *
-     * @param shapes A list with all shapes to be deleted
+     * @param ids A list with all shape id's to be deleted
      * @return Observable of deletion status
      */
-    Single<Boolean> delete(List<Shape> shapes);
+    Single<Boolean> delete(List<Integer> ids);
 
 
     /**

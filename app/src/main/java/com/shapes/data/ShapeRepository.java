@@ -125,16 +125,16 @@ public class ShapeRepository implements ShapeDataSource {
     }
 
     @Override
-    public Single<Boolean> delete(List<Shape> shapes) {
+    public Single<Boolean> delete(List<Integer> ids) {
         return Single.<Boolean>create(emitter -> {
 
-            for (Shape shape : shapes) {
+            for (int id : ids) {
 
                 // delete from db
-                shapeLocalDataSource.deleteShape(shape.getId());
+                shapeLocalDataSource.deleteShape(id);
 
                 // remove from cache
-                shapesCache.remove(shape.getId());
+                shapesCache.remove(id);
             }
 
             // proceed
