@@ -106,6 +106,15 @@ public class ShapeRepositoryTest {
     }
 
     @Test
+    public void deleteAllShapes() {
+        //call method and check status
+        shapeRepository.delete(shapes).test().assertValue(true);
+
+        // verify local data source method called once
+        Mockito.verify(localDataSource).deleteShape(shape.getId());
+    }
+
+    @Test
     public void clear() {
         //call method and check status
         shapeRepository.clear().test().assertValue(true);
