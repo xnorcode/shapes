@@ -40,7 +40,7 @@ public class StatsFragment extends DaggerFragment implements StatsContract.View 
     }
 
     @Override
-    public void showCounts(List<Map.Entry<Integer, Integer>> groupedShapes) {
+    public void showCounts(List<Map.Entry<String, Integer>> groupedShapes) {
 
     }
 
