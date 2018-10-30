@@ -1,5 +1,6 @@
 package com.shapes.data.local;
 
+import com.shapes.data.EditorAction;
 import com.shapes.data.Shape;
 
 import java.util.List;
@@ -13,9 +14,12 @@ public class ShapeLocalDataSource implements DbHelper {
 
     private ShapeDao shapeDao;
 
+    private EditorActionDao actionDao;
+
     @Inject
-    public ShapeLocalDataSource(ShapeDao shapeDao) {
+    public ShapeLocalDataSource(ShapeDao shapeDao, EditorActionDao actionDao) {
         this.shapeDao = shapeDao;
+        this.actionDao = actionDao;
     }
 
     @Override
@@ -46,5 +50,30 @@ public class ShapeLocalDataSource implements DbHelper {
     @Override
     public void deleteShapes() {
         shapeDao.deleteShapes();
+    }
+
+    @Override
+    public List<EditorAction> getActions() {
+        return actionDao.getActions();
+    }
+
+    @Override
+    public EditorAction getAction(int id) {
+        return actionDao.getAction(id);
+    }
+
+    @Override
+    public void saveActions(List<EditorAction> actions) {
+        actionDao.saveActions(actions);
+    }
+
+    @Override
+    public void deleteActions() {
+        actionDao.deleteActions();
+    }
+
+    @Override
+    public void deleteAction(int id) {
+        actionDao.deleteAction(id);
     }
 }

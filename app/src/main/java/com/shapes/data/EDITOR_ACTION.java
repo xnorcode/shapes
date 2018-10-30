@@ -1,4 +1,4 @@
-package com.shapes.ui.editor;
+package com.shapes.data;
 
 import android.support.annotation.IntDef;
 

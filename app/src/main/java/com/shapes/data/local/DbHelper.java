@@ -1,5 +1,6 @@
 package com.shapes.data.local;
 
+import com.shapes.data.EditorAction;
 import com.shapes.data.Shape;
 
 import java.util.List;
@@ -55,4 +56,43 @@ public interface DbHelper {
      * Deletes all shapes in the database
      */
     void deleteShapes();
+
+
+    /**
+     * Gets all editor actions from db
+     *
+     * @return List of actions
+     */
+    List<EditorAction> getActions();
+
+
+    /**
+     * Get specific action from db
+     *
+     * @param id Editor action id
+     * @return EditorAction
+     */
+    EditorAction getAction(int id);
+
+
+    /**
+     * Saves a list of actions in db
+     *
+     * @param actions a list of actions to save
+     */
+    void saveActions(List<EditorAction> actions);
+
+
+    /**
+     * Deletes all actions in db
+     */
+    void deleteActions();
+
+
+    /**
+     * Deletes specific action in db
+     *
+     * @param id The id of the action to be deleted
+     */
+    void deleteAction(int id);
 }
