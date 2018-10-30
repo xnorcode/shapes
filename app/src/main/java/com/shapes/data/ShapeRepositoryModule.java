@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.persistence.room.Room;
 
 import com.shapes.data.local.DbHelper;
+import com.shapes.data.local.EditorActionDao;
 import com.shapes.data.local.ShapeDao;
 import com.shapes.data.local.ShapeDatabase;
 import com.shapes.data.local.ShapeLocalDataSource;
@@ -27,8 +28,14 @@ public class ShapeRepositoryModule {
 
     @Singleton
     @Provides
-    DbHelper providesShapeLocalDataSource(ShapeDao dao) {
-        return new ShapeLocalDataSource(dao);
+    DbHelper providesShapeLocalDataSource(ShapeDao shapeDao, EditorActionDao actionDao) {
+        return new ShapeLocalDataSource(shapeDao, actionDao);
+    }
+
+    @Singleton
+    @Provides
+    EditorActionDao providesEditorActionDao(ShapeDatabase db) {
+        return db.getEditorActionDao();
     }
 
     @Singleton
