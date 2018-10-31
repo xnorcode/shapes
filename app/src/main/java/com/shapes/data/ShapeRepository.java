@@ -264,7 +264,7 @@ public class ShapeRepository implements ShapeDataSource {
             for (int id : ids) {
 
                 // delete from db
-                shapeLocalDataSource.deleteShape(id);
+                shapeLocalDataSource.deleteAction(id);
 
                 // remove from cache
                 actionsCache.remove(id);
